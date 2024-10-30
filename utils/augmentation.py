@@ -5,11 +5,10 @@ import pandas as pd
 
 class DataAugmentation:
 
-    def __init__(self, traditional_bt_file, llm_translated_data, X_train, y_train) -> None:
+    def __init__(self, traditional_bt_file, llm_translated_file, X_train, y_train) -> None:
         self.traditional_translated_texts = []
         self.X_train = X_train
         self.y_train = y_train
-        self.llm_translated_data = llm_translated_data
         self.X_train_augmented_traditional = []
         self.y_train_augmented_traditional = []
         self.X_train_augmented_llm = []
@@ -20,7 +19,9 @@ class DataAugmentation:
         if os.path.exists(traditional_bt_file):
             with open(traditional_bt_file, 'r') as f:
                 translated_text = f.readlines()
-            self.traditional_translated_texts = [s.strip() for s in translated_text]
+                self.traditional_translated_texts = [s.strip() for s in translated_text]
+        with open(llm_translated_file, mode='r') as file:
+            self.llm_translated_data = file.read().splitlines()
     
     def augment(self, seed=10):
         indices_dict = {value: np.where(self.y_train == value)[0] for value in np.unique(self.y_train)}
